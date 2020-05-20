@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'constant.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,62 +9,124 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Facebook',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-
-      _counter++;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: 100.0, left: 40.0, right: 40.0),
+//        color: Colors.white,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    'Facebook',
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 30.0,
+                        fontFamily: 'avenir',
+                        fontWeight: FontWeight.w900),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Text(
+                    "Connect with friends and Stay safe",
+                    style: TextStyle(
+                        color: Color(0xFF242424),
+                        fontSize: 30.0,
+                        fontFamily: 'avenir',
+                        fontWeight: FontWeight.w900),
+                  ),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: "Enter Address",
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 20.0)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: "Password",
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 20.0)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                RichText(
+                  text: TextSpan(
+                    text: 'By Signing up, you agree to the ',
+                    style: TextStyle(color: Colors.grey),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: 'Terms and condition',
+                          style: TextStyle(color: Colors.blue)),
+                      TextSpan(text: ' of this service'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Buttons('Sign in', Color(0xFF1977F1)),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: Buttons('Register', Color(0xFF131F38)),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
+}
+
+class Buttons extends StatelessWidget {
+  final String text;
+  final Color color;
+
+  Buttons(this.text, this.color);
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return Container(
+      height: 60.0,
+      child: Center(
+        child: Text(text, style: KButtonTextStyle),
       ),
-      body: Center(
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(40),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
