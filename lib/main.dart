@@ -40,28 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
                     'Facebook',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 30.0,
-                        fontFamily: 'avenir',
-                        fontWeight: FontWeight.w900),
+                    style: KConnectStyle,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
                     "Connect with friends and Stay safe",
-                    style: TextStyle(
-                        color: Color(0xFF242424),
-                        fontSize: 30.0,
-                        fontFamily: 'avenir',
-                        fontWeight: FontWeight.w900),
+                    style: KConnectStyle,
                   ),
                 ),
                 TextField(
                   decoration: InputDecoration(
-                      hintText: "Enter Address",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 20.0)),
+                      hintText: "Email Address",
+                      hintStyle: kInputTextStyle),
                 ),
                 SizedBox(
                   height: 20,
@@ -69,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextField(
                   decoration: InputDecoration(
                       hintText: "Password",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 20.0)),
+                      hintStyle: kInputTextStyle),
                 ),
                 SizedBox(
                   height: 20,
@@ -91,12 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
+                      flex: 3,
                       child: Buttons('Sign in', Color(0xFF1977F1)),
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Expanded(
+                      flex: 4,
                       child: Buttons('Register', Color(0xFF131F38)),
                     )
                   ],
