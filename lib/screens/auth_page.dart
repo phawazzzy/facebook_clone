@@ -105,7 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       flex: 4,
                       child: Buttons('Register', Color(0xFF131F38), () {
-                        print('working');
+                        print(' register Tapped');
+                        Navigator.pushNamed(context, '/feeds');
                       }),
                     )
                   ],
