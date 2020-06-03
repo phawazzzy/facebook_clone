@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import '../shared/constant.dart';
 import 'package:facebookclone/services/auth.dart';
 import 'package:facebookclone/shared/loading.dart';
+import 'package:toast/toast.dart';
 
-class MyHomePage extends StatefulWidget {
+class AuthPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AuthPageState createState() => _AuthPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AuthPageState extends State<AuthPage> {
   AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -18,7 +19,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String error = '';
   bool regLoading = false;
   bool logLoading = false;
-
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -76,22 +76,25 @@ class _MyHomePageState extends State<MyHomePage> {
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         onChanged: (value) => email = value,
-                        validator: (value) => value.isEmpty ? 'this field can\t be empty' : null,
+                        validator: (value) =>
+                            value.isEmpty ? 'this field can\t be empty' : null,
                         controller: _emailController,
                         decoration: InputDecoration(
-                            hintText: "Email Address", hintStyle: kInputTextStyle),
+                            hintText: "Email Address",
+                            hintStyle: kInputTextStyle),
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       TextFormField(
                         onChanged: (value) => password = value,
-                        validator: (value) => value.length < 6 ? 'password character must be at least 6' : null,
+                        validator: (value) => value.length < 6
+                            ? 'password character must be at least 6'
+                            : null,
                         obscureText: true,
                         controller: _passwordController,
                         decoration: InputDecoration(
-                            hintText: "Password",
-                            hintStyle: kInputTextStyle),
+                            hintText: "Password", hintStyle: kInputTextStyle),
                       ),
                       SizedBox(
                         height: 20,
@@ -109,7 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                         ),
                       ),
-                      Text(error.isEmpty ? '' : error  , style: TextStyle(color: Colors.red, fontSize: 18.0),),
+                      Text(
+                        error.isEmpty ? '' : error,
+                        style: TextStyle(color: Colors.red, fontSize: 18.0),
+                      ),
                       SizedBox(
                         height: 30,
                       ),
@@ -122,10 +128,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                 loading: logLoading,
                                 text: 'Sign in',
                                 color: Color(0xFF1977F1),
-                                onTap: () {
-                              print('working');
-                              Navigator.pushNamed(context, '/newpost');
-                            }),
+                                onTap: () async {
+                                  try {
+                                    if (_formKey.currentState.validate()) {
+                                      setState(() => logLoading = true);
+                                      dynamic result = await _auth
+                                          .signInWithEmailAndPassword(
+                                              email, password);
+                                      Toast.show(result.message, context,
+                                          duration: 2,
+                                          gravity: Toast.BOTTOM,
+                                      );
+                                      setState(() => logLoading = false);
+                                    }
+                                  } catch (e) {
+                                    Toast.show(e.toString(), context,
+                                        duration: 2,
+                                        gravity: Toast.BOTTOM);
+                                  }
+                                }),
                           ),
                           SizedBox(
                             width: 10,
@@ -133,26 +154,29 @@ class _MyHomePageState extends State<MyHomePage> {
                           Expanded(
                             flex: 4,
                             child: Buttons(
-                              loading: regLoading,
+                                loading: regLoading,
                                 text: 'Register',
                                 color: Color(0xFF131F38),
-                                onTap: () async{
-                              try{
-                                if(_formKey.currentState.validate()) {
-                                  setState(() => regLoading = true);
-                                  dynamic result = await _auth.registerUserWithEmailAndPassword(email, password);
-                                  if (result == null) {
-                                    setState(() => regLoading = false);
-                                    error = 'something went wrong';
-                                  } else {
-                                    setState(() => regLoading = false);
-                                    Navigator.pushReplacementNamed(context, '/feeds');
+                                onTap: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    setState(() => regLoading = true);
+                                    try {
+                                      dynamic result = await _auth
+                                          .registerUserWithEmailAndPassword(
+                                              email, password);
+                                      Toast.show(result.message, context,
+                                          duration: 2,
+                                          gravity: Toast.BOTTOM);
+                                      setState(() => regLoading = false);
+                                    } catch (e) {
+                                      setState(() => regLoading = false);
+//                                      print('toast');
+                                      Toast.show(e.toString(), context,
+                                          duration: 2,
+                                          gravity: Toast.BOTTOM);
+                                    }
                                   }
-                                }
-                              }catch(e){
-
-                              }
-                            }),
+                                }),
                           )
                         ],
                       ),
@@ -183,7 +207,7 @@ class Buttons extends StatelessWidget {
       child: Container(
         height: 60.0,
         child: Center(
-          child: loading ? Loading(): Text(text, style: KButtonTextStyle),
+          child: loading ? Loading() : Text(text, style: KButtonTextStyle),
         ),
         decoration: BoxDecoration(
           color: color,

@@ -1,3 +1,4 @@
+import 'package:facebookclone/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/constant.dart';
@@ -30,20 +31,23 @@ class _FeedsState extends State<Feeds> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Facebook', style: KFBStyle),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 20.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Color(0xFF484E55),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Clone Mode",
-                              style: TextStyle(
-                                  fontFamily: 'Avenir-black',
-                                  fontSize: 15.0,
-                                  color: Color(0xFFFFFFFF)),
+                        GestureDetector(
+                          onTap: () async => await AuthService().signOut(),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 20.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Color(0xFF484E55),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Clone Mode",
+                                style: TextStyle(
+                                    fontFamily: 'Avenir-black',
+                                    fontSize: 15.0,
+                                    color: Color(0xFFFFFFFF)),
+                              ),
                             ),
                           ),
                         )
