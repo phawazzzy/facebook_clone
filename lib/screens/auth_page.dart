@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     error = 'something went wrong';
                                   } else {
                                     setState(() => regLoading = false);
-                                    Navigator.pushNamed(context, '/feeds');
+                                    Navigator.pushReplacementNamed(context, '/feeds');
                                   }
                                 }
                               }catch(e){
