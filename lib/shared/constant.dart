@@ -12,10 +12,10 @@ fontWeight: FontWeight.w900);
 
 const KFBStyle = TextStyle(
     color: Color(0xFF1977F1),
-    fontSize: 30.0,
+    fontSize: 40.0,
     fontFamily: 'Avenir-black',
-    fontWeight: FontWeight.w900);
+    fontWeight: FontWeight.w900,
+);
 
 const KMsgStyle = TextStyle(
 fontFamily: 'Avenir-roman', fontSize: 20.0);
-

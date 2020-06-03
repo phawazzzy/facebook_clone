@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/auth_page.dart';
 import 'screens/new_post.dart';
-import 'screens/feeds.dart';
+import 'screens/feeds/feeds.dart';
 
 void main() {
   runApp(MyApp());

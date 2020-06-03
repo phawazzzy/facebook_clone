@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constant.dart';
+import '../shared/constant.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -37,7 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Container(
         margin: EdgeInsets.only(top: 100.0, left: 40.0, right: 40.0),
-//        color: Colors.white,
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(

@@ -1,13 +1,26 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../constant.dart';
-
+import '../shared/constant.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 class NewPost extends StatefulWidget {
   @override
   _NewPostState createState() => _NewPostState();
 }
 
 class _NewPostState extends State<NewPost> {
+  File _image;
+  final _picker = ImagePicker();
+
+
+  Future getImage() async {
+    final pickedFile  = await _picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+    print(_image);
+  }
 
   final String imageUrl = "https://avatars1.githubusercontent.com/u/36922198?s=400&u=2f6c001435568e44b18fc5f657062532dcf92758&v=4";
   @override
@@ -39,7 +52,7 @@ class _NewPostState extends State<NewPost> {
                       Icons.send,
                       color: Colors.blue,
                       size: 40,
-                    ))
+                    )),
                   ],
                 ),
                 SizedBox(
@@ -57,7 +70,10 @@ class _NewPostState extends State<NewPost> {
                         margin: EdgeInsets.only(left: 20),
                         child: Padding(
                           padding: EdgeInsets.only(left: 10.0, bottom: 10.0),
-                          child: TextField(
+                          child: TextFormField(
+                            onChanged: (value) {
+                              print(value);
+                            },
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             maxLength: null,
@@ -69,7 +85,6 @@ class _NewPostState extends State<NewPost> {
                         ),
                       height: 100,
                         decoration: BoxDecoration(
-//                          color: Colors.grey,
                           border: Border.all(color: Color(0xFFE7E9ED), width: 2.0),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -85,10 +100,15 @@ class _NewPostState extends State<NewPost> {
                   height: 40,
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 40.0,
-                      color: Colors.grey,
+                    child: FlatButton(
+                      onPressed: () async{
+                        await getImage();
+                      },
+                      child: Icon(
+                        Icons.add_a_photo,
+                        size: 40.0,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -96,15 +116,11 @@ class _NewPostState extends State<NewPost> {
                   height: 30.0,
                 ),
                 Container(
-//                child: Text("this pic"),
+                child: _image == null ? Text("No image selected.") : Image.file(_image),
                   width: double.infinity,
                   height: 250,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage("$imageUrl"),
-                    ),
                   ),
                 )
               ],
