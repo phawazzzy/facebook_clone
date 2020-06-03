@@ -142,9 +142,7 @@ class _AuthPageState extends State<AuthPage> {
                                       setState(() => logLoading = false);
                                     }
                                   } catch (e) {
-                                    Toast.show(e.toString(), context,
-                                        duration: 2,
-                                        gravity: Toast.BOTTOM);
+                                    print(e);
                                   }
                                 }),
                           ),
@@ -169,11 +167,7 @@ class _AuthPageState extends State<AuthPage> {
                                           gravity: Toast.BOTTOM);
                                       setState(() => regLoading = false);
                                     } catch (e) {
-                                      setState(() => regLoading = false);
-//                                      print('toast');
-                                      Toast.show(e.toString(), context,
-                                          duration: 2,
-                                          gravity: Toast.BOTTOM);
+                                      print(e);
                                     }
                                   }
                                 }),
