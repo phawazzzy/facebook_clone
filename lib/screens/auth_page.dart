@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../shared/constant.dart';
+import 'package:facebookclone/services/auth.dart';
+import 'package:facebookclone/shared/loading.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -7,6 +10,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  String email;
+  String password;
+  String error = '';
+  bool regLoading = false;
+  bool logLoading = false;
+
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -56,59 +69,95 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: KConnectStyle,
                   ),
                 ),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      hintText: "Email Address", hintStyle: kInputTextStyle),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                      hintText: "Password", hintStyle: kInputTextStyle),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: 'By Signing up, you agree to the ',
-                    style: TextStyle(
-                        color: Colors.grey, fontFamily: 'Avenir-black'),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'Terms and Condition',
-                          style: TextStyle(color: Colors.blue)),
-                      TextSpan(text: ' of this service'),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) => email = value,
+                        validator: (value) => value.isEmpty ? 'this field can\t be empty' : null,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                            hintText: "Email Address", hintStyle: kInputTextStyle),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        onChanged: (value) => password = value,
+                        validator: (value) => value.length < 6 ? 'password character must be at least 6' : null,
+                        obscureText: true,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                            hintText: "Password",
+                            hintStyle: kInputTextStyle),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          text: 'By Signing up, you agree to the ',
+                          style: TextStyle(
+                              color: Colors.grey, fontFamily: 'Avenir-black'),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: 'Terms and Condition',
+                                style: TextStyle(color: Colors.blue)),
+                            TextSpan(text: ' of this service'),
+                          ],
+                        ),
+                      ),
+                      Text(error.isEmpty ? '' : error  , style: TextStyle(color: Colors.red, fontSize: 18.0),),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 3,
+                            child: Buttons(
+                                loading: logLoading,
+                                text: 'Sign in',
+                                color: Color(0xFF1977F1),
+                                onTap: () {
+                              print('working');
+                              Navigator.pushNamed(context, '/newpost');
+                            }),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Buttons(
+                              loading: regLoading,
+                                text: 'Register',
+                                color: Color(0xFF131F38),
+                                onTap: () async{
+                              try{
+                                if(_formKey.currentState.validate()) {
+                                  setState(() => regLoading = true);
+                                  dynamic result = await _auth.registerUserWithEmailAndPassword(email, password);
+                                  if (result == null) {
+                                    setState(() => regLoading = false);
+                                    error = 'something went wrong';
+                                  } else {
+                                    setState(() => regLoading = false);
+                                    Navigator.pushNamed(context, '/feeds');
+                                  }
+                                }
+                              }catch(e){
+
+                              }
+                            }),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 3,
-                      child: Buttons('Sign in', Color(0xFF1977F1), () {
-                        print('working');
-                        Navigator.pushNamed(context, '/newpost');
-                      }),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Buttons('Register', Color(0xFF131F38), () {
-                        print(' register Tapped');
-                        Navigator.pushNamed(context, '/feeds');
-                      }),
-                    )
-                  ],
                 )
               ],
             ),
@@ -123,8 +172,9 @@ class Buttons extends StatelessWidget {
   final String text;
   final Color color;
   final Function onTap;
+  final bool loading;
 
-  Buttons(this.text, this.color, this.onTap);
+  Buttons({this.text, this.color, this.onTap, this.loading});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +183,7 @@ class Buttons extends StatelessWidget {
       child: Container(
         height: 60.0,
         child: Center(
-          child: Text(text, style: KButtonTextStyle),
+          child: loading ? Loading(): Text(text, style: KButtonTextStyle),
         ),
         decoration: BoxDecoration(
           color: color,
